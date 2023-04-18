@@ -1,0 +1,100 @@
+<!-- reactiveFormModule added attributes to form tag for us to use -->
+<form [formGroup]="form" (ngSubmit)="processDelivery()">
+
+    <table>
+        <tr>
+            <td>Name:</td>
+            <td>
+                <input type="text" size="30" formControlName="name">
+                <span *ngIf="form.get('name')?.invalid && form.get('name')?.dirty">Please enter your name</span>
+            </td>
+        </tr>
+        <tr>
+            <td>Address:</td>
+            <td>
+                <input type="text" size="30" formControlName="address">
+                <span *ngIf="hasError('address')">Please enter address</span>
+            </td>
+        </tr>
+        <tr>
+            <td>Email:</td>
+            <td>
+                <input type="email" size="30" formControlName="email">
+            </td>
+        </tr>
+        <tr>
+            <td>Date:</td>
+            <td>
+                <input type="date" formControlName="deliveryDate">
+            </td>
+        </tr>
+        <tr>
+            <td>Session:</td>
+            <td>
+                AM<input type="radio" name="session" value="AM" formControlName="session">
+                PM<input type="radio" name="session" value="PM" formControlName="session">
+            </td>
+        </tr>
+        <tr>
+            <td>Options:</td>
+            <td>
+                Insurance<input type="checkbox" value="insurance" formControlName="insurance">
+                Priority<input type="checkbox" value="priority" formControlName="priority">
+            </td>
+        </tr>
+        <tr>
+            <td>Comments:</td>
+            <td>
+                <textarea name="comments" id="" cols="30" rows="3" formControlName="comments"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <p>
+                    Invalid: {{form.invalid}} , Valid: {{form.valid}}
+                </p>
+                <p>
+                    Pristine: {{form.pristine}} , Dirty: {{form.dirty}}
+                </p>
+
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <!-- <button type="submit" [disabled]="form.invalid">Place Order</button> -->
+
+                <!--  isFormInvalid() check for form.invalid and date is greater than today -->
+                <button type="submit" [disabled]="isFormInvalid()">Place Order</button>
+            </td>
+            <td>
+                <button type="button" (click)="addItem()">Add Item</button>
+            </td>
+        </tr>
+    </table>
+
+    <div *ngIf="itemArray.length> 0; else noItems">
+        <h2>Items</h2>
+        <table formArrayName="items">
+            <tr *ngFor="let it of itemArray.controls; let i = index" [formGroupName]="i">
+                <td>
+                    <input type="text" size="30" placeholder="Order" formControlName="item">
+                </td>
+                <td>
+                    <input type="text" size="30" placeholder="Quantity" formControlName="quantity">
+                </td>
+                <td>
+                    <button (click)="deleteItem(i)">X</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <ng-template></ng-template>
+    
+</form>
+
+<ng-template #noItems>
+    <h2> Your order has no items </h2>
+  </ng-template>
